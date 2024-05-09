@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Multiple PDFs</title>
+
+</head>
+<body>
+    <h1>Chat with Multiple PDFs</h1>
+    <div class="pdf-upload">
+        <form action="/process" method="post" enctype="multipart/form-data">
+            <h2>Upload your PDFs</h2>
+            <input type="file" name="pdf_docs" accept=".pdf" multiple required>
+            <button type="submit">Process</button>
+        </form>
+    </div>
+
+    <div class="chat-container">
+        {% if pdf_processed %}
+        <h2>Ask a question about your documents</h2>
+        <form action="/chat" method="post">
+            <input type="hidden" name="conversation_chain" value="{{ conversation_chain }}">
+            <input type="text" name="user_question" placeholder="Enter your question" required>
+            <button type="submit">Ask</button>
+        </form>
+
+        {% if user_question %}
+        <h3>Your Question: {{ user_question }}</h3>
+        {% endif %}
+
+        {% if chat_history %}
+        <h3>Chat History:</h3>
+        <div id="chat-history">
+            {% for message in chat_history %}
+                {% if loop.index is even %}
+                    <div class="chat-message user">{{ message.content }}</div>
+                {% else %}
+                    <div class="chat-message bot">{{ message.content }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
