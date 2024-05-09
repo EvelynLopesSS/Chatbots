@@ -9,6 +9,7 @@ https://github.com/EvelynLopesSS/PDf_Assistant/assets/113462824/074f7a26-b1ac-45
 
 ## 👉 Resources Used
 
+
 ### 📚 Langchain 🦜🖇️
 
 Langchain is a library that offers a variety of functionalities for natural language processing (NLP), including language modeling, search, and information retrieval. In the PDF Assistant, Langchain is used to create a question and answer (QA) model to interact with the content of PDF documents.
