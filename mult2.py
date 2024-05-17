@@ -62,7 +62,7 @@ def extract_text_from_other_file_types(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
     return text
-# Função principal para extrair e processar o texto do arquivo
+    
 def process_document(file_path):
     file_extension = os.path.splitext(file_path)[1].lower()
 
@@ -74,7 +74,6 @@ def process_document(file_path):
         text = extract_text_from_other_file_types(file_path)
 
     if text:
-        # Initialize text splitter
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1500,
             chunk_overlap=200,
@@ -82,7 +81,6 @@ def process_document(file_path):
         )
         all_chunks = text_splitter.split_documents(text)
 
-        # Create and persist the vector store
         st.session_state.vectorstore = Chroma.from_documents(
             documents=all_chunks,
             embedding=OllamaEmbeddings(model="mistral")
@@ -93,7 +91,6 @@ def process_document(file_path):
         st.error("Failed to process the document.")
         return "" 
     
-# Função para processar todos os documentos em um diretório
 def process_directory(directory):
     documents = {}
     for filename in glob.glob(f"{directory}/**/*", recursive=True):
@@ -105,7 +102,6 @@ def process_directory(directory):
     return documents
 
 
-# Configurações iniciais da aplicação
 if not os.path.exists('files'):
     os.mkdir('files')
 
@@ -160,13 +156,10 @@ if 'chat_history' not in st.session_state:
 
 #st.markdown(page_bg_img, unsafe_allow_html=True)    
 
-# Título da aplicação
 st.title("PDF Assistant")
 
-# Barra lateral para upload de arquivos
 st.sidebar.image('logo.png', use_column_width=True)
 
-# Instruções para o usuário
 st.markdown("""
     ## Como Usar Esta Aplicação
     - **Arraste e solte** seu arquivo na área designada ou use o botão de upload abaixo.
@@ -179,15 +172,15 @@ st.markdown("""
 uploaded_file = st.sidebar.file_uploader("Upload your file", type=['pdf', 'txt', 'doc', 'docx', 'pptx'])
 processar_doc = st.sidebar.button("Processar Documentos")
 
-# Iterar sobre o histórico de chat e exibir as mensagens
 for message in st.session_state.chat_history:
     with st.chat_message(message["role"]):
         if message["role"] == "user":
+            avatar=f"data:image/png;base64,{user_avatar_base64 }"
             st.write("User’s question 🗣️")
         elif message["role"] == "assistant":
             st.write("Assistant's response 🤖")
+            avatar=f"data:image/png;base64,{assistant_avatar_base64}"
         st.markdown(message["message"])
-
 
 if uploaded_file is not None:
     if not os.path.isfile("files/"+uploaded_file.name):
